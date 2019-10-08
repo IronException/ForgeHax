@@ -17,6 +17,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
+
 import static com.matt.forgehax.Helper.getWorld;
 
 /**
@@ -25,21 +27,23 @@ import static com.matt.forgehax.Helper.getWorld;
 @RegisterMod
 public class OpenContainerESP extends ToggleMod {
 
+  ArrayList<BlockPos> viewed = new ArrayList<>();
+
+
+
   public OpenContainerESP() {
-    super(Category.RENDER, "StorageESP", false, "Shows not yet opened or changed storage");
+    super(Category.RENDER, "OpenContainerESP", false, "Shows not yet opened or changed storage");
   }
   
   private int getTileEntityColor(TileEntity tileEntity) {
     if (tileEntity instanceof TileEntityChest
         || tileEntity instanceof TileEntityDispenser
         || tileEntity instanceof TileEntityShulkerBox) {
-      return Colors.ORANGE.toBuffer();
-    } else if (tileEntity instanceof TileEntityEnderChest) {
-      return Colors.PURPLE.toBuffer();
-    } else if (tileEntity instanceof TileEntityFurnace) {
-      return Colors.GRAY.toBuffer();
+      return Colors.RED.toBuffer();
+    }else if (tileEntity instanceof TileEntityFurnace) {
+      return Colors.RED.toBuffer();
     } else if (tileEntity instanceof TileEntityHopper) {
-      return Colors.DARK_RED.toBuffer();
+      return Colors.RED.toBuffer();
     } else {
       return -1;
     }
@@ -47,10 +51,10 @@ public class OpenContainerESP extends ToggleMod {
   
   private int getEntityColor(Entity entity) {
     if (entity instanceof EntityMinecartChest) {
-      return Colors.ORANGE.toBuffer();
+      return Colors.RED.toBuffer();
     } else if (entity instanceof EntityItemFrame
         && ((EntityItemFrame) entity).getDisplayedItem().getItem() instanceof ItemShulkerBox) {
-      return Colors.YELLOW.toBuffer();
+      return Colors.RED.toBuffer();
     } else {
       return -1;
     }
@@ -63,8 +67,8 @@ public class OpenContainerESP extends ToggleMod {
     for (TileEntity tileEntity : getWorld().loadedTileEntityList) {
       BlockPos pos = tileEntity.getPos();
       
-      int color = getTileEntityColor(tileEntity);
-      if (color != -1) {
+      int color = Colors.RED.toBuffer();
+      if (viewed.contains(pos)) {
         GeometryTessellator.drawCuboid(event.getBuffer(), pos, GeometryMasks.Line.ALL, color);
       }
     }
