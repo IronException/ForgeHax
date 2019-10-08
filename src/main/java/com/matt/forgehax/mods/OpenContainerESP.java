@@ -1,5 +1,7 @@
 package com.matt.forgehax.mods;
 
+import com.matt.forgehax.Helper;
+import com.matt.forgehax.asm.events.PacketEvent;
 import com.matt.forgehax.events.RenderEvent;
 import com.matt.forgehax.util.color.Colors;
 import com.matt.forgehax.util.mod.Category;
@@ -12,8 +14,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.item.EntityMinecartChest;
 import net.minecraft.item.ItemShulkerBox;
+import net.minecraft.network.play.client.CPacketCloseWindow;
+import net.minecraft.network.play.server.SPacketCloseWindow;
 import net.minecraft.tileentity.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.event.entity.player.PlayerContainerEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 
@@ -58,6 +64,23 @@ public class OpenContainerESP extends ToggleMod {
     } else {
       return -1;
     }
+  }
+
+
+
+  @SubscribeEvent
+  public void event(PlayerContainerEvent e){
+    int windowId = e.getContainer().windowId;
+    Helper.printInform(windowId + " " + e.getContainer().toString());
+  }
+
+
+  @SubscribeEvent
+  public void onPacketReceived(PacketEvent.Outgoing.Pre event) {
+    if (!(event.getPacket() instanceof CPacketCloseWindow))
+        return;
+    Helper.printInform("cpacketClose event");
+
   }
   
   @SubscribeEvent
