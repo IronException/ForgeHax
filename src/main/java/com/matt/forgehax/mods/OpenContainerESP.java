@@ -25,6 +25,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 
+import static com.matt.forgehax.Helper.getLocalPlayer;
 import static com.matt.forgehax.Helper.getWorld;
 
 /**
@@ -80,6 +81,10 @@ public class OpenContainerESP extends ToggleMod {
     if (!(event.getPacket() instanceof CPacketCloseWindow))
         return;
     Helper.printInform("cpacketClose event");
+
+
+    RayTraceUtils.rayTraceTowards(player(), playerRotations(), playerController().getBlockReachDistance());
+    getLocalPlayer().rayTrace()
 
   }
   
